@@ -10,7 +10,7 @@ from Crypto.PublicKey import RSA
 #    return binascii.dehexlify(str)
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-server_address = ('158.108.34.100', 8000)
+server_address = ('127.0.0.1', 8000)
 print >> sys.stderr, 'connecting to %s port %s' % server_address
 sock.connect(server_address)
 
@@ -21,7 +21,7 @@ try:
     privateKey = RSA.importKey(pri_key)
 
     cipher = sock.recv(2048)
-    print "receiving data %s" % cipher
+    print "receiving encrypt message " + cipher
 
     message = privateKey.decrypt(cipher)
     print 'message is %s' % message
