@@ -1,5 +1,6 @@
 import socket
 import sys
+import time
 from Crypto.PublicKey import RSA
 
 #def binToHex(str):
@@ -19,21 +20,14 @@ try:
     publicKey = RSA.importKey(pub_key)
     privateKey = RSA.importKey(pri_key)
 
-    message = 'hello, world'
-    cipher = publicKey.encrypt(message, 32)[0]
-    print 'message is %s' % privateKey.decrypt(cipher)
-    amount_received = 0
-    amount_expected = len(cipher)
-    
-    print >> sys.stderr, 'sending'
-    sock.sendall(cipher)
+    cipher = sock.recv(2048)
+    print "receiving data %s" % cipher
 
-    data = ''
-    while amount_received < amount_expected:
-        data += sock.recv(16)
-        amount_received = len(data)
-    data = privateKey.decrypt(data)
-    print >> sys.stderr, 'receive "%s"' % data
+    message = privateKey.decrypt(cipher)
+    print 'message is %s' % message
+
+    print >> sys.stderr,'sending message to server'
+    sock.sendall(message)
 
 finally:
     print sys.stderr, 'closing socket'
